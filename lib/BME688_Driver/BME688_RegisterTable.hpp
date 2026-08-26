@@ -1,5 +1,4 @@
-#pragma once
-#include "BME688_Source.h";
+#include "BME688_Source.h"
 
 namespace BME688
 {
@@ -11,6 +10,7 @@ namespace BME688
 
         // General Control
         constexpr uint8_t RESET = 0xe0;
+        constexpr uint8_t STATUS = 0x73;
 
         // Measurement Configuration
         constexpr uint8_t CONFIG = 0x75;
