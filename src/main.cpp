@@ -1,18 +1,20 @@
 #include <Arduino.h>
+#include <BME688.hpp>
+#include <stdlib.h>
 
-// put function declarations here:
-int myFunction(int, int);
+BME688 mySensor;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  delay(1000);
+  Serial.begin(9600);
+  mySensor = BME688();
+  mySensor.Config(5,4,2);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+  delay(2500);
+  mySensor.Measure();
+  delay(50);
+  double temperature = mySensor.TemperatureFloat_C();
+  Serial.println("Current Temperature: " + String(temperature));
 }
