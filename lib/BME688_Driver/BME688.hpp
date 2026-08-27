@@ -11,12 +11,19 @@ namespace BME688
         // Measureing
         void Measure();
         // Fetching
-        float TemperatureFloat_K();
-        float TemperatureFloat_F();
-        float TemperatureFloat_C();
-        float Temperature_K();
-        float Temperature_F();
-        float Temperature_C();
+        double Temperature_K();
+        double Temperature_F();
+        double Temperature_C();
+
+        double Pressure_Pa();
+        double Pressure_kPa();
+        double Pressure_bar();
+        double Pressure_mmhg();
+        double Pressure_inhg();
+
+        double Humidity();
+
+        double Gas();
 
     private:
         I2C::I2C_Wire myWire;
@@ -27,10 +34,6 @@ namespace BME688
         void ComputePressure();
         void ComputeHumidity();
         void ComputeGas();
-        void ComputeTemperatureF();
-        void ComputePressureF();
-        void ComputeHumidityF();
-        void ComputeGasF();
         // Gas Helpers
         uint8_t CalculateHeaterResistance(uint16_t targetTemp);
         uint8_t CalculateHeaterDuration(uint16_t durationMs);

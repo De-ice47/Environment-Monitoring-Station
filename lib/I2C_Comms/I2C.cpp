@@ -84,6 +84,13 @@ namespace I2C
 
         thisWire.endTransmission();
     }
+    void Write_NoReg(uint8_t deviceAddress, uint8_t data){
+        thisWire.beginTransmission(deviceAddress); // Calling the desired device on the I2C bus
+
+        thisWire.write(data); // Setting value at register
+
+        thisWire.endTransmission();
+    }
     uint8_t I2C_Wire::Read(uint8_t deviceAddress, uint8_t deviceRegister)
     {
         thisWire.beginTransmission(deviceAddress);

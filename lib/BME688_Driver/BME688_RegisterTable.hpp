@@ -19,7 +19,7 @@ namespace BME688
         constexpr uint8_t CTRL_HUM = 0x72;
 
         constexpr uint8_t CTRL_GAS_1 = 0x71;
-        constexpr uint8_t CTRL_GAS_2 = 0x70;
+        constexpr uint8_t CTRL_GAS_0 = 0x70;
 
         constexpr uint8_t GAS_WAIT_SHARED = 0x6e;
         constexpr uint8_t GAS_WAIT_0 = 0x64;

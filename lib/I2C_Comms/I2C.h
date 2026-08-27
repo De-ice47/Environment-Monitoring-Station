@@ -20,6 +20,7 @@ namespace I2C
         void ScanBus();
         void ChangeFrequency(uint32_t frequency);
         void Write(uint8_t deviceAddress, uint8_t deviceRegister, uint8_t data);
+        void Write_NoReg(uint8_t deviceAddress, uint8_t data);
         uint8_t Read(uint8_t deviceAddress, uint8_t deviceRegister);
         void ReadMultiple(uint8_t deviceAddress, uint8_t deviceRegister, uint8_t *dataBuffer, uint8_t dataCount);
 
