@@ -10,7 +10,7 @@ namespace LL
     void Println(const std::string& message);
 
     uint16_t GetLineCount();
-    const std::string GetLine(uint16_t index);
+    const std::string& GetLine(uint16_t index);
     const std::string GetLines(uint16_t index, uint8_t count);
 
     void Clear();

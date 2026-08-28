@@ -1,13 +1,13 @@
 #include "LoggerLite.hpp"
 
-namespace LoggerLite
+namespace LL
 {
     std::string lines[MAX_LINES];
 
     uint8_t lineCount = 0;
     uint8_t oldestLine = 0;
 
-    void Println(const std::string& message)
+    void Println(const std::string message)
     {
         if(lineCount < MAX_LINES)
         {
@@ -26,12 +26,12 @@ namespace LoggerLite
         }
     }
 
-    uint8_t GetLineCount()
+    uint16_t GetLineCount()
     {
         return lineCount;
     }
 
-    const std::string& GetLine(uint8_t index)
+    const std::string& GetLine(uint16_t index)
     {
         if(index >= lineCount)
         {
