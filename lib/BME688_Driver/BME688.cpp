@@ -245,11 +245,6 @@ namespace BME688
     {
         uint8_t gas_msb = Read(RT::GAS_RESIST_MSB_0);
         uint8_t gas_lsb = Read(RT::GAS_RANGE_RESIST_LSB_0);
-
-        Serial.printf(
-            "Gas registers: MSB=0x%02X LSB=0x%02X\n",
-            gas_msb,
-            gas_lsb);
         uint16_t gas_adc = ((uint16_t)Read(RT::GAS_RESIST_MSB_0) << 2) |
                            ((Read(RT::GAS_RANGE_RESIST_LSB_0) >> 6) & 0x03);
         uint8_t gas_range = Read(RT::GAS_RANGE_RESIST_LSB_0) & 0x0F;

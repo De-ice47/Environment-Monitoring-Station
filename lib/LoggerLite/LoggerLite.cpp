@@ -2,72 +2,89 @@
 
 namespace LL
 {
-    std::string lines[MAX_LINES];
+    char lines[MAX_LINES][MAX_LINE_LENGTH];
 
-    uint8_t lineCount = 0;
-    uint8_t oldestLine = 0;
+    std::uint8_t lineCount = 0;
+    std::uint8_t oldestLine = 0;
 
-    void Println(const std::string message)
+    OutputCallback output = nullptr;
+
+
+    void Initialize(OutputCallback outputCallback)
     {
+        output = outputCallback;
+
+        Clear();
+    }
+
+
+    void Println(const char* message)
+    {
+        if(message == nullptr)
+            return;
+
+
+        // Forward message to external output.
+        if(output != nullptr)
+        {
+            output(message);
+        }
+
+
+        // Determine where to store the message.
+        std::uint8_t index;
+
         if(lineCount < MAX_LINES)
         {
-            uint8_t index =
-                (oldestLine + lineCount) % MAX_LINES;
+            index = (oldestLine + lineCount) % MAX_LINES;
 
-            lines[index] = message;
             lineCount++;
         }
         else
         {
-            lines[oldestLine] = message;
+            index = oldestLine;
 
             oldestLine =
                 (oldestLine + 1) % MAX_LINES;
         }
+
+
+        // Copy message into buffer.
+        std::strncpy(
+            lines[index],
+            message,
+            MAX_LINE_LENGTH - 1
+        );
+
+        // Always guarantee null termination.
+        lines[index][MAX_LINE_LENGTH - 1] = '\0';
     }
 
-    uint16_t GetLineCount()
+
+    std::uint8_t GetLineCount()
     {
         return lineCount;
     }
 
-    const std::string& GetLine(uint16_t index)
+
+    const char* GetLine(std::uint8_t index)
     {
         if(index >= lineCount)
-        {
-            static const std::string empty = "";
-            return empty;
-        }
+            return "";
 
-        uint8_t actualIndex =
+        std::uint8_t actualIndex =
             (oldestLine + index) % MAX_LINES;
 
         return lines[actualIndex];
     }
 
-    std::string GetLines(uint8_t index, uint8_t count)
-    {
-        if(index >= lineCount)
-            return "";
-
-        if(index + count > lineCount)
-            return "";
-
-        std::string result;
-
-        for(uint8_t i = 0; i < count; i++)
-        {
-            result += GetLine(index + i);
-            result += '\n';
-        }
-
-        return result;
-    }
 
     void Clear()
     {
-        for(uint8_t i = 0; i < MAX_LINES; i++)
-            lines[i].clear();
+        for(std::uint8_t i = 0; i < MAX_LINES; i++)
+        {
+            lines[i][0] = '\0';
+        }
 
         lineCount = 0;
         oldestLine = 0;

@@ -8,6 +8,7 @@ float timerDisplay = 0;
 float timerSensor = 0;
  
 void DrawTemperatureScreen();
+void SerialOutput(const char* message);
 
 void setup()
 {
@@ -16,6 +17,7 @@ void setup()
   //
   delay(1000);
   Serial.begin(9600);
+  LL::OutputCallback(SerialOutput);
   LL::Println("[ROOT] Beginning Serial Output @ 9600 Baud");
   // 
   // 2. Sensor
@@ -86,4 +88,7 @@ void DrawTemperatureScreen(){
     SSD1309::display.setFont(u8g2_font_6x10_tf);
     SSD1309::display.drawStr(0, 46, "178.4/298.1  -1.2/hr");
     SSD1309::display.drawBox(0,60,128,1);
+}
+void SerialOutput(const char* message){
+  Serial.println(message);
 }

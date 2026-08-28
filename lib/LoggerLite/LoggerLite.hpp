@@ -1,17 +1,21 @@
 #pragma once
 #include <cstdint>
-#include <string>
+#include <cstring>
 
 namespace LL
 {
-    constexpr uint8_t MAX_LINES = 256;
+    constexpr std::uint8_t MAX_LINES = 255;
+    constexpr std::uint8_t MAX_LINE_LENGTH = 64;
 
-    void Print(const std::string& message);
-    void Println(const std::string& message);
+    using OutputCallback = void (*)(const char* message);
 
-    uint16_t GetLineCount();
-    const std::string& GetLine(uint16_t index);
-    const std::string GetLines(uint16_t index, uint8_t count);
+    void Initialize(OutputCallback output = nullptr);
+
+    void Println(const char* message);
+
+    std::uint8_t GetLineCount();
+
+    const char* GetLine(std::uint8_t index);
 
     void Clear();
 }

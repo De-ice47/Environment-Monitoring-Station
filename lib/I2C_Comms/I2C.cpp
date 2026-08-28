@@ -45,22 +45,11 @@ namespace I2C
             switch (resultMessage)
             {
             case 0:
-                LL::Println("[I2C] Found device at 0x" + String(i, HEX) + " (" + String(i) + ")");
+            {
+                String message = String("[I2C] Found device at 0x") + String(i, HEX) + " (" + String(i) + ")";
+                LL::Println(message.c_str());
                 break;
-            case 1:
-                LL::Println("[I2C] Data too long to fit in transmit buffer for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
-                break;
-            case 2:
-                break;
-            case 3:
-                LL::Println("[I2C] NACK on data for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
-                break;
-            case 4:
-                LL::Println("[I2C] Other error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
-                break;
-            case 5:
-                LL::Println("[I2C] Timeout error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
-                break;
+            }
             default:
                 break;
             }
