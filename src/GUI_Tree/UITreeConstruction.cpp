@@ -1,4 +1,4 @@
-#include <GUI_Tree/UITreeConstruction.hpp>
+#include <UITreeConstruction.hpp>
 
 // Layer 1
 NGUI::UINode DEBUG;

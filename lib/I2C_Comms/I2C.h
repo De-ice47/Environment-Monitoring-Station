@@ -1,6 +1,6 @@
 #pragma once
-#include "Arduino.h"
 #include "Wire.h"
+#include "LoggerLite.hpp"
 
 namespace I2C
 {
@@ -18,6 +18,7 @@ namespace I2C
         void Start();
         void Stop();
         void ScanBus();
+        bool CallAddress(uint8_t address);
         void ChangeFrequency(uint32_t frequency);
         void Write(uint8_t deviceAddress, uint8_t deviceRegister, uint8_t data);
         void Write_NoReg(uint8_t deviceAddress, uint8_t data);

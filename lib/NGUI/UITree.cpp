@@ -16,24 +16,15 @@ namespace NGUI
 
         Serial.println("Starting Search");
 
-        Serial.printf("RootNode address: %p\n", (void *)&RootNode);
-        Serial.printf("childCount: %u\n", RootNode.childCount);
-        Serial.printf("children address: %p\n", (void *)RootNode.children);
-
-        Serial.println("Before loop");
-
         for (uint8_t i = 0; i < RootNode.childCount; i++)
         {
-            Serial.printf("Loop i = %u\n", i);
-
             UINode *child = RootNode.children[i];
 
-            Serial.printf("Child pointer: %p\n", (void *)child);
+            Serial.printf("Node: %p\n", (void *)child);
 
             if (child == nullptr)
                 continue;
-
-            Serial.println("Child exists");
+            SearchNode(child,result,1);
         }
 
         Serial.println("Finished Search");
@@ -42,43 +33,25 @@ namespace NGUI
     }
     void SearchNode(UINode *node, String &output, uint8_t depth)
     {
-        Serial.printf(
-            "SearchNode: node=%p depth=%u\n",
-            (void *)node,
-            depth);
-
         if (node == nullptr)
         {
-            Serial.println("NULL NODE");
             return;
         }
-
         if (depth >= 10)
             return;
-
-        Serial.printf(
-            "  name ptr=%p\n",
-            (void *)node->name);
-
+        // putting name on the result
         output += "\n";
-
-        for (uint8_t i = 0; i < depth; i++)
-            output += "\t";
-
-        Serial.println("  adding name...");
-
+        for (uint8_t i = 0; i < depth; i++){
+            if(i == depth-1) output += "└─ ";
+            else  output += "   ";
+        }
+           
         output += node->name;
-
-        Serial.println("  name added");
-
-        Serial.printf(
-            "  childCount=%u\n",
-            node->childCount);
-
+        // searching it children
         for (uint8_t i = 0; i < node->childCount; i++)
         {
             Serial.printf(
-                "  child[%u] = %p\n",
+                "  node[%u] = %p\n",
                 i,
                 (void *)node->children[i]);
 

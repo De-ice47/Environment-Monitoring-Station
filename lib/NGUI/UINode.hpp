@@ -21,6 +21,7 @@ namespace NGUI
 
         UINode **children;
         uint8_t childCount;
+        uint8_t childCapacity;
 
         std::function<void()> ActionOnInteract;
 

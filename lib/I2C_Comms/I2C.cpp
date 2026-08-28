@@ -45,23 +45,21 @@ namespace I2C
             switch (resultMessage)
             {
             case 0:
-                Serial.println("Found device at 0x" + String(i, HEX) + " (" + String(i) + ")");
-                // Success
+                LL::Println("[I2C] Found device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             case 1:
-                Serial.println("Data too long to fit in transmit buffer for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
+                LL::Println("[I2C] Data too long to fit in transmit buffer for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             case 2:
-                // Serial.println("NACK on address for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             case 3:
-                Serial.println("NACK on data for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
+                LL::Println("[I2C] NACK on data for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             case 4:
-                Serial.println("Other error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
+                LL::Println("[I2C] Other error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             case 5:
-                Serial.println("Timeout error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
+                LL::Println("[I2C] Timeout error for device at 0x" + String(i, HEX) + " (" + String(i) + ")");
                 break;
             default:
                 break;
@@ -69,6 +67,18 @@ namespace I2C
         }
         if (!wirePreviouslyOn)
             Stop();
+    }
+    bool I2C_Wire::CallAddress(uint8_t address)
+    {
+        if (address >= 0x7f || address < 0x08)
+        {
+            LL::Println("[I2C] Address out of bounds");
+            return false;
+        }
+        thisWire.beginTransmission(address);
+        uint8_t result = thisWire.endTransmission();
+        if(result == 0) return true;
+        else return false;
     }
     void I2C_Wire::ChangeFrequency(uint32_t frequency)
     {
@@ -84,7 +94,8 @@ namespace I2C
 
         thisWire.endTransmission();
     }
-    void Write_NoReg(uint8_t deviceAddress, uint8_t data){
+    void Write_NoReg(uint8_t deviceAddress, uint8_t data)
+    {
         thisWire.beginTransmission(deviceAddress); // Calling the desired device on the I2C bus
 
         thisWire.write(data); // Setting value at register

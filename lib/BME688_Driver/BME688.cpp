@@ -11,12 +11,16 @@ namespace BME688
     double humidity;
     double gasResistence;
 
+    uint16_t gasADC;
+
     void Sensor::Begin(uint8_t pinSDA, uint8_t pinSCL, uint8_t busNumber)
     {
+        LL::Println("Initializing BME688 Sensor...");
         myAddress = AlternateAddress ? 0x76 : 0x77;
         myWire = I2C::I2C_Wire(pinSDA, pinSCL, busNumber);
         myWire.Start();
         ConfigureGas(300, 100);
+        LL::Println("BME688 Initialized.");
     }
     void Sensor::Reset()
     {
@@ -27,6 +31,7 @@ namespace BME688
 
     void Sensor::Measure()
     {
+        LL::Println("BME688 Measurement Started");
         // -------------------------------------------------
         // 1. Configure gas heater
         // -------------------------------------------------
@@ -76,28 +81,10 @@ namespace BME688
         ctrl_meas |= 0x01;
 
         // -------------------------------------------------
-        // 4. Debug: verify configuration
-        // -------------------------------------------------
-
-        Serial.printf(
-            "RES_HEAT_0: 0x%02X | GAS_WAIT_0: 0x%02X\n",
-            Read(RT::RES_HEAT_0),
-            Read(RT::GAS_WAIT_0));
-
-        Serial.printf(
-            "CTRL_GAS_0: 0x%02X | CTRL_GAS_1: 0x%02X\n",
-            Read(RT::CTRL_GAS_0),
-            Read(RT::CTRL_GAS_1));
-
-        // -------------------------------------------------
         // 5. Start measurement LAST
         // -------------------------------------------------
 
         Write(RT::CTRL_MEAS, ctrl_meas);
-
-        Serial.printf(
-            "CTRL_MEAS: 0x%02X\n",
-            Read(RT::CTRL_MEAS));
 
         // -------------------------------------------------
         // 6. Wait for measurement to complete
@@ -112,39 +99,7 @@ namespace BME688
         uint8_t status = Read(RT::MEAS_STATUS_0);
         uint8_t variant = Read(RT::VARIANT_ID);
 
-        Serial.printf(
-            "Variant ID: 0x%02X\n",
-            variant);
-
-        Serial.printf(
-            "MEAS_STATUS_0: 0x%02X (%c%c%c%c%c%c%c%c)\n",
-            status,
-            (status & 0x80) ? '1' : '0',
-            (status & 0x40) ? '1' : '0',
-            (status & 0x20) ? '1' : '0',
-            (status & 0x10) ? '1' : '0',
-            (status & 0x08) ? '1' : '0',
-            (status & 0x04) ? '1' : '0',
-            (status & 0x02) ? '1' : '0',
-            (status & 0x01) ? '1' : '0');
-
-        Serial.printf(
-            "NEW_DATA: %u\n",
-            (status >> 7) & 1);
-
-        Serial.printf(
-            "STATUS=0x%02X | NEW=%u | GAS_INDEX=%u | "
-            "GAS_VALID=%u | HEAT_STABLE=%u\n",
-
-            status,
-
-            (status >> 7) & 0x01,
-
-            (status >> 4) & 0x07,
-
-            (status >> 1) & 0x01,
-
-            status & 0x01);
+        LL::Println("BME688 Measurement Complete");
     }
 
     // Fetching (public calls)
@@ -195,6 +150,9 @@ namespace BME688
     {
         ComputeGas();
         return gasResistence;
+    }
+    uint16_t Sensor::GasADC(){
+        return gasADC;
     }
     // Computation
 
@@ -301,11 +259,7 @@ namespace BME688
         var2 *= INT32_C(3);
         var2 = INT32_C(4096) + var2;
         gasResistence = 1000000.0f * (float)var1 / (float)var2;
-        Serial.printf(
-            "Gas ADC: %u | Gas Range: %u | Gas Resistance: %.2f ohm\n",
-            gas_adc,
-            gas_range,
-            gasResistence);
+        gasADC = gas_adc;
     }
 
     // Helpers

@@ -1,10 +1,4 @@
-#include <Arduino.h>
-#include <BME688.hpp>
-#include <stdlib.h>
-#include <SSD1309.hpp>
-#include <SystemArt/SystemArt.h>
-#include <NGUI.hpp>
-#include <GUI_Tree/UITreeConstruction.hpp>
+#include <Source.hpp>
 
 BME688::Sensor mySensor;
 
@@ -17,14 +11,27 @@ void DrawTemperatureScreen();
 
 void setup()
 {
+  //
+  // 1. Serial
+  //
   delay(1000);
   Serial.begin(9600);
-  // Sensor
+  LL::Println("[ROOT] Beginning Serial Output @ 9600 Baud");
+  // 
+  // 2. Sensor
+  // 
+  delay(100);
   mySensor = BME688::Sensor();
   mySensor.Begin(5, 4, 2);
-  // Display
+  //
+  // 3. Display
+  //
+    delay(100);
   SSD1309::Begin();
-  // NGUI UITree Construct
+  //
+  // 4. NGUI UITree Construct
+  //
+    delay(100);
   Serial.println("Initializing NGUI");
   NGUI::Initialize();
   Serial.println("Constructing Tree");
@@ -32,10 +39,17 @@ void setup()
   Serial.println("printing Tree");
   String debugStructure = NGUI::DebugStructure();
   Serial.println(debugStructure);
+  //
+  //
+  //
+
 }
 
 void loop()
 {
+  //
+  // Read the sensor
+  //
   if (millis() - timerSensor > updateInterval_sensor)
   {
     timerSensor = millis();
@@ -45,11 +59,10 @@ void loop()
     float pressure = mySensor.Pressure_kPa();
     float humidity = mySensor.Humidity();
     float gas = mySensor.Gas();
-    /*Serial.println("Current Temperature: " + String(temperature, 1) +
-                   "F, Pressure: " + String(pressure) +
-                   " kPa, Humidity: " + String(humidity, 0) +
-                   "%, Gas Resist: " + String(gas));*/
   }
+  //
+  // Display 
+  //
   if (millis() - timerDisplay > updateInterval_display)
   {
     timerDisplay = millis();
@@ -73,5 +86,4 @@ void DrawTemperatureScreen(){
     SSD1309::display.setFont(u8g2_font_6x10_tf);
     SSD1309::display.drawStr(0, 46, "178.4/298.1  -1.2/hr");
     SSD1309::display.drawBox(0,60,128,1);
-    
 }

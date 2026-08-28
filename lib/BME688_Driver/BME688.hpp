@@ -1,4 +1,4 @@
-#include "I2C.h"
+#include "BME688_Source.h"
 namespace BME688
 {
     class Sensor
@@ -24,6 +24,7 @@ namespace BME688
         double Humidity();
 
         double Gas();
+        uint16_t GasADC();
 
     private:
         I2C::I2C_Wire myWire;

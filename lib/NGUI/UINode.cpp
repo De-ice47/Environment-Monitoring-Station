@@ -3,25 +3,17 @@
 
 namespace NGUI
 {
-    const char *name = nullptr;
-    UINode *parent = nullptr;
-    UINode **children = nullptr;
-
-    uint8_t childCount = 0;
-    uint8_t childCapacity = 4;
-
-    std::function<void()> ActionOnInteract;
-
-    UINode::UINode(const char *name, UINode *parent)
+    UINode::UINode(const char* name, UINode* parent)
+        : name(name),
+          parent(parent),
+          children(nullptr),
+          childCount(0),
+          childCapacity(0),
+          ActionOnInteract(nullptr)
     {
-        this->name = name;
-        this->parent = parent;
-        this->children = nullptr;
-        childCount = 0;
-        childCapacity = 8;
-        ActionOnInteract = nullptr;
     }
-    UINode::UINode(const char *name)
+
+    UINode::UINode(const char* name)
         : UINode(name, nullptr)
     {
     }
@@ -31,62 +23,71 @@ namespace NGUI
     {
     }
 
-    bool UINode::AddChild(UINode *child)
+    bool UINode::AddChild(UINode* child)
     {
-        if (childCount >= childCapacity)
+        if(child == nullptr)
+            return false;
+
+        if(childCount >= childCapacity)
         {
-            uint8_t newCapacity = childCapacity == 0
-                                      ? 4
-                                      : childCapacity * 2;
+            uint8_t newCapacity =
+                childCapacity == 0
+                    ? 4
+                    : childCapacity * 2;
 
-            UINode**newChildren = new UINode *[newCapacity];
+            UINode** newChildren =
+                new UINode*[newCapacity];
 
-            for (uint8_t i = 0; i < childCount; i++)
+            for(uint8_t i = 0; i < childCount; i++)
+            {
                 newChildren[i] = children[i];
+            }
 
             delete[] children;
 
             children = newChildren;
             childCapacity = newCapacity;
         }
-        child->parent = this;
+
         children[childCount] = child;
+        child->parent = this;
         childCount++;
 
-        child->parent = this;
         return true;
     }
-    UINode *UINode::FindChild(const char *name)
+
+    UINode* UINode::FindChild(const char* name)
     {
-        for (uint8_t i = 0; i < childCount; i++)
+        for(uint8_t i = 0; i < childCount; i++)
         {
-            UINode *currentNode = children[i];
-            if (currentNode != nullptr)
+            UINode* currentNode = children[i];
+
+            if(currentNode != nullptr)
             {
-                if (currentNode->name == name)
+                if(strcmp(currentNode->name, name) == 0)
                     return currentNode;
             }
         }
+
         return nullptr;
     }
-    UINode *UINode::FindChild(uint8_t index)
+
+    UINode* UINode::FindChild(uint8_t index)
     {
-        if (index < childCount)
+        if(index < childCount)
             return children[index];
-        else
-            return nullptr;
+
+        return nullptr;
     }
-    uint8_t UINode::IndexOf(UINode *child)
+
+    uint8_t UINode::IndexOf(UINode* child)
     {
-        for (uint8_t i = 0; i < childCount; i++)
+        for(uint8_t i = 0; i < childCount; i++)
         {
-            UINode *currentNode = children[i];
-            if (currentNode != nullptr)
-            {
-                if (currentNode->name == name)
-                    return i;
-            }
+            if(children[i] == child)
+                return i;
         }
-        return 0xff;
+
+        return 0xFF;
     }
 }
