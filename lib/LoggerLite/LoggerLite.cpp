@@ -78,7 +78,6 @@ namespace LL
         return lines[actualIndex];
     }
 
-
     void Clear()
     {
         for(std::uint8_t i = 0; i < MAX_LINES; i++)

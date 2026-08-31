@@ -4,8 +4,8 @@
 
 namespace LL
 {
-    constexpr std::uint8_t MAX_LINES = 255;
-    constexpr std::uint8_t MAX_LINE_LENGTH = 64;
+    constexpr uint8_t MAX_LINES = 255;
+    constexpr uint8_t MAX_LINE_LENGTH = 64;
 
     using OutputCallback = void (*)(const char* message);
 
@@ -13,9 +13,9 @@ namespace LL
 
     void Println(const char* message);
 
-    std::uint8_t GetLineCount();
+    uint8_t GetLineCount();
 
-    const char* GetLine(std::uint8_t index);
+    const char* GetLine(uint8_t index);
 
     void Clear();
 }

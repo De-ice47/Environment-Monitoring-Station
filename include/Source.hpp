@@ -1,3 +1,4 @@
+#pragma once
 #include <stdlib.h>
 #include <Arduino.h>
 #include <LoggerLite.hpp>
@@ -6,3 +7,8 @@
 #include <SSD1309.hpp>
 #include <NGUI.hpp>
 #include <UITreeConstruction.hpp>
+#include <string.h>
+#include <iostream>
+#include <sstream>
+#include <iomanip>
+#include <RollingBuffer.hpp>
