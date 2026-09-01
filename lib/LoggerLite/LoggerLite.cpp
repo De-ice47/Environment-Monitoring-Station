@@ -1,5 +1,5 @@
 #include "LoggerLite.hpp"
-
+#include <Arduino.h>
 namespace LL
 {
     char lines[MAX_LINES][MAX_LINE_LENGTH];
@@ -13,7 +13,6 @@ namespace LL
     void Initialize(OutputCallback outputCallback)
     {
         output = outputCallback;
-
         Clear();
     }
 
@@ -22,7 +21,6 @@ namespace LL
     {
         if(message == nullptr)
             return;
-
 
         // Forward message to external output.
         if(output != nullptr)

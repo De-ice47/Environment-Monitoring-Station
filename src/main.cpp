@@ -1,24 +1,17 @@
 #include <Source.hpp>
 #include <ScreenHandlers.hpp>
+#include <Func_Serial.hpp>
+#include <Func_Display.hpp>
+#include <Func_Sensor.hpp>
 
-BME688::Sensor mySensor;
-
+// Settings
 float updateInterval_sensor = 1000;
 float updateInterval_display = 200;
+// Timers
 float timerDisplay = 0;
 float timerSensor = 0;
 
-float temperature = 0;
-float pressure = 0;
-float humidity = 0;
-float gas = 0;
-
-void SerialOutput(const char *message);
-
-void Clear();
-void Draw();
-void DrawLogs();
-U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display = &SSD1309::display;
+void DrawGUI();
 
 void setup()
 {
@@ -26,31 +19,20 @@ void setup()
   // 1. Serial
   //
   delay(1000);
-  Serial.begin(9600);
-  LL::OutputCallback(SerialOutput);
-  LL::Println("[ROOT] Starting Serial Output");
-  Clear();
+  SetupSerial();
   DrawLogs();
-  Draw();
   //
   // 2. Display
   //
   delay(100);
-  SSD1309::Begin();
-  LL::Println("[SSD1309] Display Active");
-  Clear();
+  SetupDisplay();
   DrawLogs();
-  Draw();
   //
   // 3. Sensor
   //
   delay(100);
-  mySensor = BME688::Sensor();
-  mySensor.Begin(5, 4, 2);
-  LL::Println("[BME688] Sensor OK");
-  Clear();
+  SetupSensor();
   DrawLogs();
-  Draw();
   //
   // 4. NGUI UITree Construct
   //
@@ -61,71 +43,55 @@ void setup()
   ConstructTree();
   String debugStructure = NGUI::DebugStructure();
   Serial.println(debugStructure);
-  Clear();
   DrawLogs();
-  Draw();
   //
+  // 5. Encoder
   //
+  delay(100);
+
+  LL::Println("[EC11] Encoder Ready");
+  DrawLogs();
   //
   delay(250);
   LL::Println("[ROOT] Startup Complete!");
-  Clear();
   DrawLogs();
-  Draw();
   delay(1500);
 }
 
 void loop()
 {
-  //
-  // Read the sensor
-  //
 
+  // Read the sensor
   if (millis() - timerSensor > updateInterval_sensor)
   {
     timerSensor = millis();
-    mySensor.Measure();
-    delay(1);
-    temperature = mySensor.Temperature_C();
-    pressure = mySensor.Pressure_kPa();
-    humidity = mySensor.Humidity();
-    gas = mySensor.Gas();
+    MeasureEnvironment();
   }
-  //
+
   // Display
-  //
-  Serial.println("here");
   if (millis() - timerDisplay > updateInterval_display)
   {
     timerDisplay = millis();
+    DrawGUI();
+  }
+}
 
-    // Draw all of the shit here
-    Clear();
-    FeedTemperature(temperature);
-    DrawTemperatureScreen(display);
+void DrawGUI(){
+  Clear();
+    int dataPage = 0;
+    switch (dataPage)
+    {
+    case 0:
+      FeedTemperature(temperature);
+      DrawTemperatureScreen(display);
+      break;
+    case 1:
+      FeedPressure(pressure);
+      DrawPressureScreen(display);
+      break;
+
+    default:
+      break;
+    }
     Draw();
-  }
-}
-
-void SerialOutput(const char *message)
-{
-  Serial.println(message);
-}
-inline void Clear()
-{
-  SSD1309::display.clearBuffer();
-}
-inline void Draw()
-{
-  SSD1309::display.sendBuffer();
-}
-void DrawLogs()
-{
-  int logsToShow = min((uint8_t)9, LL::GetLineCount());
-  int startIndex = LL::GetLineCount() - logsToShow;
-  display->setFont(u8g2_font_tiny5_t_all);
-  for (uint8_t i = startIndex, yPos = 0; i < logsToShow; i++, yPos++)
-  {
-    display->drawStr(2, 6 + yPos * 6, LL::GetLine(i));
-  }
 }

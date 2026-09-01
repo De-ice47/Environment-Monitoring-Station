@@ -12,3 +12,5 @@
 #include <sstream>
 #include <iomanip>
 #include <RollingBuffer.hpp>
+#include <Conversions.hpp>
+#include <ESP_Knob.h>

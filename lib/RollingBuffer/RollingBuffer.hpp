@@ -17,12 +17,11 @@ public:
 
     bool Push(const T& value)
     {
-        if constexpr (Capacity == 0)
+        if (Capacity == 0)
             return false;
 
         // Position where the new item goes
-        std::size_t index =
-            (start + count) % Capacity;
+        std::size_t index = (start + count) % Capacity;
 
         data[index] = value;
 
@@ -62,16 +61,12 @@ public:
     }
     T& operator[](std::size_t index)
     {
-        std::size_t actualIndex =
-            (start + index) % Capacity;
-
+        std::size_t actualIndex = (start + index) % Capacity;
         return data[actualIndex];
     }
     const T& operator[](std::size_t index) const
     {
-        std::size_t actualIndex =
-            (start + index) % Capacity;
-
+        std::size_t actualIndex = (start + index) % Capacity;
         return data[actualIndex];
     }
     T& Oldest()
@@ -84,16 +79,12 @@ public:
     }
     T& Newest()
     {
-        std::size_t index =
-            (start + count - 1) % Capacity;
-
+        std::size_t index = (start + count - 1) % Capacity;
         return data[index];
     }
     const T& Newest() const
     {
-        std::size_t index =
-            (start + count - 1) % Capacity;
-
+        std::size_t index = (start + count - 1) % Capacity;
         return data[index];
     }
 };

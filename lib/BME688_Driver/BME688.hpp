@@ -1,3 +1,4 @@
+#pragma once
 #include "BME688_Source.h"
 namespace BME688
 {

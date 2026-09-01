@@ -1,52 +1,37 @@
 #include <ScreenHandlers/temperatureScreenHandler.hpp>
 
-double currentTemperature;
-double highTemperature;
-double lowTemperature = 500;
+double currentTemp;
+double highTemp;
+double lowTemp = 500;
 double deltaTemp;
 
-double lastRead = 0;
-RollingBuffer<double,1200> deltaTemps;
+double lastReadTemp = 0;
+RollingBuffer<double, 1200> deltaTempStack;
 
 void FeedTemperature(double temperatureValue)
 {
-    currentTemperature = temperatureValue;
-    lowTemperature = min(temperatureValue, lowTemperature);
-    highTemperature = max(temperatureValue, highTemperature);
-    if(lastRead == 0) deltaTemps.Push(0);
-    else deltaTemps.Push(temperatureValue - lastRead);
-    lastRead = temperatureValue;
+    currentTemp = temperatureValue;
+    lowTemp = min(temperatureValue, lowTemp);
+    highTemp = max(temperatureValue, highTemp);
+    if (lastReadTemp == 0)
+        deltaTempStack.Push(0);
+    else
+        deltaTempStack.Push(temperatureValue - lastReadTemp);
+    lastReadTemp = temperatureValue;
     double sumDeltas = 0;
     for (int i = 0; i < 1200; i++)
     {
-        sumDeltas += deltaTemps[i];
+        sumDeltas += deltaTempStack[i];
     }
     deltaTemp = sumDeltas;
 }
 
-double C_to_F(double value)
-{
-    return value * 1.8 + 32;
-}
-double C_to_K(double value)
-{
-    return value + 273.15;
-}
-std::string double_to_string(double value, int decimal_places) {
-    std::ostringstream oss;
-    // std::fixed ensures fixed-point notation
-    // std::setprecision sets the number of decimal places
-    oss << std::fixed << std::setprecision(decimal_places) << value;
-    return oss.str();
-}
-
 void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
-
-    int unitMode = 1;
-    double convertedTemp = currentTemperature;
-    double convertedLowTemp = lowTemperature;
-    double convertedHighTemp = highTemperature;
+    int unitMode = 2;
+    double convertedTemp = currentTemp;
+    double convertedLowTemp = lowTemp;
+    double convertedHighTemp = highTemp;
     double convertedDeltaTemp = deltaTemp;
 
     SSD1309::display.drawBitmap(0, 0, 2, 16, Icon_Temperature);
@@ -60,32 +45,25 @@ void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     switch (unitMode)
     {
     case 0:
-        sCurrentTemp = double_to_string(convertedTemp,1) + "C";
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "C";
         break;
     case 1:
-        convertedTemp = C_to_F(currentTemperature);
-        convertedLowTemp = C_to_F(lowTemperature);
-        convertedHighTemp = C_to_F(highTemperature);
-        sCurrentTemp = double_to_string(convertedTemp,1) + "F";
+        convertedTemp = CVRT::C_to_F(currentTemp);
+        convertedLowTemp = CVRT::C_to_F(lowTemp);
+        convertedHighTemp = CVRT::C_to_F(highTemp);
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "F";
         break;
     case 2:
-        convertedTemp = C_to_K(currentTemperature);
-        convertedLowTemp = C_to_K(lowTemperature);
-        convertedHighTemp = C_to_K(highTemperature);
-        sCurrentTemp = double_to_string(convertedTemp,1) + "K";
+        convertedTemp = CVRT::C_to_K(currentTemp);
+        convertedLowTemp = CVRT::C_to_K(lowTemp);
+        convertedHighTemp = CVRT::C_to_K(highTemp);
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "K";
     default:
         break;
     }
-    sLowTemp = double_to_string(convertedLowTemp,1);
-    sHiTemp = double_to_string(convertedHighTemp,1);
-    sDeltaTemp = double_to_string(convertedDeltaTemp,1);
-    
-        Serial.print("Temp: ");
-        Serial.print(convertedTemp);
-        Serial.print("   ");
-        Serial.print(sCurrentTemp.c_str());
-        Serial.print("   ");
-        Serial.println(currentTemperature);
+    sLowTemp = CVRT::double_to_string(convertedLowTemp, 1);
+    sHiTemp = CVRT::double_to_string(convertedHighTemp, 1);
+    sDeltaTemp = CVRT::double_to_string(convertedDeltaTemp, 1);
 
     SSD1309::display.drawStr(0, 35, sCurrentTemp.c_str());
     SSD1309::display.setFont(u8g2_font_6x10_tf);

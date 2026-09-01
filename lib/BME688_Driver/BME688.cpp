@@ -31,7 +31,6 @@ namespace BME688
 
     void Sensor::Measure()
     {
-        LL::Println("BME688 Measurement Started");
         // -------------------------------------------------
         // 1. Configure gas heater
         // -------------------------------------------------
@@ -98,8 +97,6 @@ namespace BME688
 
         uint8_t status = Read(RT::MEAS_STATUS_0);
         uint8_t variant = Read(RT::VARIANT_ID);
-
-        LL::Println("BME688 Measurement Complete");
     }
 
     // Fetching (public calls)
