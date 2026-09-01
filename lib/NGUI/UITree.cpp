@@ -3,6 +3,7 @@ namespace NGUI
 {
     void SearchNode(UINode *node, String &output, uint8_t depth);
 
+    uint8_t TreeLevel;
     UINode *CurrentNode;
     UINode RootNode;
     void Initialize()
@@ -76,6 +77,7 @@ namespace NGUI
             return false;
         UINode *targetRise = CurrentNode->parent;
         CurrentNode = targetRise;
+        TreeLevel--;
         return true;
     }
     bool Fall(uint8_t childNode)
@@ -88,6 +90,7 @@ namespace NGUI
         if (NodeToFallTo == nullptr)
             return false;
         CurrentNode = NodeToFallTo;
+        TreeLevel++;
         return true;
     }
     bool Step(uint8_t steps)
@@ -100,6 +103,14 @@ namespace NGUI
             return false;
         UINode *parent = CurrentNode->parent;
         uint8_t indexToGoTo = parent->IndexOf(CurrentNode) + steps;
+
+        if(indexToGoTo >= parent->childCount){
+            indexToGoTo %= parent->childCount;
+        }
+        else if(indexToGoTo < 0){
+            indexToGoTo = parent->childCount + indexToGoTo;
+        }
+        
         UINode *NodeToSwitchTo = parent->FindChild(indexToGoTo);
         if (NodeToSwitchTo == nullptr)
             return false;

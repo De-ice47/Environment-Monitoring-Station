@@ -1,3 +1,4 @@
+#pragma once
 #include <BME688.hpp>
 
 extern BME688::Sensor mySensor;

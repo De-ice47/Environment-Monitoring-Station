@@ -16,9 +16,8 @@ void SetupSensor()
 
 void MeasureEnvironment(){
     mySensor.Measure();
-    delay(1);
     temperature = mySensor.Temperature_C();
     pressure = mySensor.Pressure_kPa();
     humidity = mySensor.Humidity();
-    gas = mySensor.Gas();
+    gas = mySensor.GasResistence();
 }

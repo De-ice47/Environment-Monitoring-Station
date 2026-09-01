@@ -6,6 +6,7 @@
 
 namespace NGUI
 {
+    extern uint8_t TreeLevel;
     extern UINode *CurrentNode;
     extern UINode RootNode;
     // Tree structure functions

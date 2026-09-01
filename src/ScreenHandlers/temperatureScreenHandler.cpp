@@ -4,7 +4,7 @@ double currentTemp;
 double highTemp;
 double lowTemp = 500;
 double deltaTemp;
-
+ 
 double lastReadTemp = 0;
 RollingBuffer<double, 1200> deltaTempStack;
 
@@ -28,7 +28,7 @@ void FeedTemperature(double temperatureValue)
 
 void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
-    int unitMode = 2;
+    int unitMode = 1;
     double convertedTemp = currentTemp;
     double convertedLowTemp = lowTemp;
     double convertedHighTemp = highTemp;

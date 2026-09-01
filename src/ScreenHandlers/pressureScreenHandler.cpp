@@ -37,7 +37,7 @@ double C_to_K(double value)
 void DrawPressureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
 
-    int unitMode = 0;
+    int unitMode = 1;
     double convertedPres = currentPres;
     double convertedLowPres = lowPres;
     double convertedHighPres = highPres;

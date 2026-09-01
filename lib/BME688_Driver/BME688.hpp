@@ -23,8 +23,9 @@ namespace BME688
         double Pressure_inhg();
 
         double Humidity();
+        double GasResistence();
 
-        double Gas();
+        uint16_t AQI();
         uint16_t GasADC();
 
     private:

@@ -35,8 +35,8 @@ namespace BME688
         // 1. Configure gas heater
         // -------------------------------------------------
 
-        uint8_t heater_res = CalculateHeaterResistance(300);
-        uint8_t heater_dur = CalculateHeaterDuration(100);
+        uint8_t heater_res = CalculateHeaterResistance(320);
+        uint8_t heater_dur = CalculateHeaterDuration(150);
 
         Write(RT::RES_HEAT_0, heater_res);
         Write(RT::GAS_WAIT_0, heater_dur);
@@ -143,10 +143,15 @@ namespace BME688
         return humidity;
     }
     // Gas
-    double Sensor::Gas()
-    {
+    double Sensor::GasResistence(){
         ComputeGas();
         return gasResistence;
+    }
+    uint16_t Sensor::AQI()
+    {
+        ComputeGas();
+        double result = 500 * (log10(50000/gasResistence));
+        return (uint16_t)result;
     }
     uint16_t Sensor::GasADC(){
         return gasADC;

@@ -30,4 +30,11 @@ void ConstructTree(){
     DEBUG.AddChild(&Pressure);
     DEBUG.AddChild(&Humidity);
     DEBUG.AddChild(&AQI);
+
+    Temperature.AddChild(&Settings);
+    Pressure.AddChild(&Settings);
+    Humidity.AddChild(&Settings);
+    AQI.AddChild(&Settings);
+    AllData.AddChild(&Settings);
+    
 }

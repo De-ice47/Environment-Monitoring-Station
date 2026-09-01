@@ -1,3 +1,4 @@
+#pragma once
 #include <SSD1309.hpp>
 #include <LoggerLite.hpp>
 
