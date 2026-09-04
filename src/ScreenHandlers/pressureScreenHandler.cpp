@@ -1,6 +1,6 @@
 #include <ScreenHandlers/pressureScreenHandler.hpp>
 
-uint8_t pressureUnitMode = 0;
+uint8_t pressureUnitMode = 3;
 
 double currentPres;
 double highPres;
