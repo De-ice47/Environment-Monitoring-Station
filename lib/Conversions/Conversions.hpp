@@ -15,4 +15,5 @@ namespace CVRT
     double kPa_to_bar(double value);
     double kPa_to_mmHg(double value);
     double kPa_to_inHg(double value);
+    double kPa_to_psi(double value);
 }

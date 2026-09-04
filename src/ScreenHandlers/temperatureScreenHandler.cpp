@@ -1,10 +1,12 @@
 #include <ScreenHandlers/temperatureScreenHandler.hpp>
 
+uint8_t tempUnitMode = 1;
+
 double currentTemp;
 double highTemp;
 double lowTemp = 500;
 double deltaTemp;
- 
+
 double lastReadTemp = 0;
 RollingBuffer<double, 1200> deltaTempStack;
 
@@ -28,7 +30,6 @@ void FeedTemperature(double temperatureValue)
 
 void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
-    int unitMode = 1;
     double convertedTemp = currentTemp;
     double convertedLowTemp = lowTemp;
     double convertedHighTemp = highTemp;
@@ -42,7 +43,7 @@ void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     std::string sLowTemp = "";
     std::string sHiTemp = "";
     std::string sDeltaTemp = "";
-    switch (unitMode)
+    switch (tempUnitMode)
     {
     case 0:
         sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "C";
@@ -69,4 +70,29 @@ void DrawTemperatureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     SSD1309::display.setFont(u8g2_font_6x10_tf);
     SSD1309::display.drawStr(0, 46, (sLowTemp + "/" + sHiTemp + "  " + sDeltaTemp + "/hr").c_str());
     SSD1309::display.drawBox(0, 60, 128, 1);
+}
+void ChangeTemperatureUnit()
+{
+    Serial.println("new unit " + String(tempUnitMode));
+    tempUnitMode = (tempUnitMode + 1) % 3;
+}
+std::string GetFormattedTemperature(){
+    double convertedTemp = currentTemp;
+    std::string sCurrentTemp = "";
+    switch (tempUnitMode)
+    {
+    case 0:
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "C";
+        break;
+    case 1:
+        convertedTemp = CVRT::C_to_F(currentTemp);
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "F";
+        break;
+    case 2:
+        convertedTemp = CVRT::C_to_K(currentTemp);
+        sCurrentTemp = CVRT::double_to_string(convertedTemp, 1) + "K";
+    default:
+        break;
+    }
+    return sCurrentTemp;
 }

@@ -31,4 +31,7 @@ namespace CVRT
     double kPa_to_inHg(double value){
         return value * 0.296134;
     }
+    double kPa_to_psi(double value){
+        return value * 0.145038;
+    }
 }

@@ -28,7 +28,6 @@ void FeedHumidity(double humidityValue)
 
 void DrawHumidityScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
-    int unitMode = 2;
     double convertedHum = currentHum;
     double convertedLowHum = lowHum;
     double convertedHighHum = highHum;
@@ -53,4 +52,9 @@ void DrawHumidityScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     SSD1309::display.setFont(u8g2_font_6x10_tf);
     SSD1309::display.drawStr(0, 46, (sLowHum + "/" + sHiHum + "  " + sDeltaHum + "/hr").c_str());
     SSD1309::display.drawBox(0, 60, 128, 1);
+}
+std::string GetFormattedHumidity(){
+    double convertedHum = currentHum;
+    std::string sCurrentHum = CVRT::double_to_string(convertedHum, 1) + "%";
+    return sCurrentHum;
 }

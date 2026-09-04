@@ -102,8 +102,9 @@ namespace NGUI
         if (CurrentNode->parent->children == nullptr)
             return false;
         UINode *parent = CurrentNode->parent;
-        uint8_t indexToGoTo = parent->IndexOf(CurrentNode) + steps;
+        int8_t indexToGoTo = parent->IndexOf(CurrentNode) + steps;
 
+        indexToGoTo = min(parent->childCount - 1, max(0, (int)indexToGoTo));
         if(indexToGoTo >= parent->childCount){
             indexToGoTo %= parent->childCount;
         }

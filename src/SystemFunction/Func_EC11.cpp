@@ -60,17 +60,17 @@ void Int_Rot(){
 
 void Trigger_Rot()
 {
-    if(millis() - lastSignal < 200) return;
+    if(millis() - lastSignal < 650) return;
     int8_t count = encoder.getCount();
     lastSignal = millis();
-    if (count > 0)
+    if (count > 2)
     {
         if (cb_C_Rot)
             cb_C_Rot();
         Serial.println("C");
         
     }
-    else if(count < 0)
+    if(count < 2)
     {
          if (cb_CC_Rot)
             cb_CC_Rot();

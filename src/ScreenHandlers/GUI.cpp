@@ -1,26 +1,44 @@
 #include <GUI.hpp>
 
+int8_t dataScreen = 0;
 // Navigation
 void SwitchPushed()
 {
     if (NGUI::TreeLevel == 2)
-        NGUI::Fall(0);
-    if (NGUI::TreeLevel == 3)
-        NGUI::Rise();
+    {
+        switch (dataScreen)
+        {
+        case 0:
+            break;
+        case 1:
+            ChangeTemperatureUnit();
+            break;
+        case 2:
+            ChangePressureUnit();
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        default:
+            break;
+        }
+    }
 }
 void RotaryC()
 {
-    NGUI::Step(1);
+    dataScreen++;
+    if(dataScreen >= 5) dataScreen = 4;
 }
 void RotaryCC()
 {
-    NGUI::Step(-1);
+    dataScreen--;
+    if(dataScreen <= 0) dataScreen = 0;
 }
 // GUI Drawing
 void DrawGUI()
 {
     Clear();
-    //Serial.println("Tree Level: " + String(NGUI::TreeLevel) + " Node: " + String(NGUI::CurrentNode->name));
     switch (NGUI::TreeLevel)
     {
     case 0:
@@ -29,9 +47,13 @@ void DrawGUI()
     case 1:
         break;
     case 2:
-        switch (NGUI::CurrentNode->parent->IndexOf(NGUI::CurrentNode))
+        switch (dataScreen)
         {
         case 0:
+            FeedTemperature(temperature);
+            FeedPressure(pressure);
+            FeedHumidity(humidity);
+            DrawAllDataScreen();
             break;
         case 1:
             FeedTemperature(temperature);
@@ -49,12 +71,7 @@ void DrawGUI()
             FeedGas(gas);
             DrawGasScreen(display);
             break;
-        default:
-            break;
         }
-    case 3:
-        // Settings
-        break;
     default:
         break;
     }

@@ -1,5 +1,7 @@
 #include <ScreenHandlers/pressureScreenHandler.hpp>
 
+uint8_t pressureUnitMode = 0;
+
 double currentPres;
 double highPres;
 double lowPres = 500;
@@ -26,18 +28,8 @@ void FeedPressure(double pressureValue)
     deltaPres = sumDeltas;
 }
 
-double C_to_F(double value)
-{
-    return value * 1.8 + 32;
-}
-double C_to_K(double value)
-{
-    return value + 273.15;
-}
 void DrawPressureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
 {
-
-    int unitMode = 1;
     double convertedPres = currentPres;
     double convertedLowPres = lowPres;
     double convertedHighPres = highPres;
@@ -51,7 +43,7 @@ void DrawPressureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     std::string sLowPres = "";
     std::string sHiPres = "";
     std::string sDeltaPres = "";
-    switch (unitMode)
+    switch (pressureUnitMode)
     {
     case 0:
         sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "kPa";
@@ -68,11 +60,23 @@ void DrawPressureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
         convertedHighPres = CVRT::kPa_to_bar(highPres);
         sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "bar";
         break;
-        case 3:
+    case 3:
         convertedPres = CVRT::kPa_to_inHg(currentPres);
         convertedLowPres = CVRT::kPa_to_inHg(lowPres);
         convertedHighPres = CVRT::kPa_to_inHg(highPres);
         sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "inHg";
+        break;
+    case 4:
+        convertedPres = CVRT::kPa_to_mmHg(currentPres);
+        convertedLowPres = CVRT::kPa_to_mmHg(lowPres);
+        convertedHighPres = CVRT::kPa_to_mmHg(highPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 1) + "mmHg";
+        break;
+    case 5:
+        convertedPres = CVRT::kPa_to_psi(currentPres);
+        convertedLowPres = CVRT::kPa_to_psi(lowPres);
+        convertedHighPres = CVRT::kPa_to_psi(highPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "psi";
         break;
     default:
         break;
@@ -85,4 +89,42 @@ void DrawPressureScreen(U8G2_SSD1309_128X64_NONAME2_F_SW_I2C *display)
     SSD1309::display.setFont(u8g2_font_6x10_tf);
     SSD1309::display.drawStr(0, 46, (sLowPres + "/" + sHiPres + "  " + sDeltaPres + "/hr").c_str());
     SSD1309::display.drawBox(0, 60, 128, 1);
+}
+void ChangePressureUnit()
+{
+    pressureUnitMode = (pressureUnitMode + 1) % 6;
+}
+std::string GetFormattedPressure()
+{
+    double convertedPres = currentPres;
+    std::string sCurrentPres = "";
+    switch (pressureUnitMode)
+    {
+    case 0:
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "kPa";
+        break;
+    case 1:
+        convertedPres = CVRT::kPa_to_atm(currentPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "atm";
+        break;
+    case 2:
+        convertedPres = CVRT::kPa_to_bar(currentPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "bar";
+        break;
+    case 3:
+        convertedPres = CVRT::kPa_to_inHg(currentPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "inHg";
+        break;
+    case 4:
+        convertedPres = CVRT::kPa_to_mmHg(currentPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 1) + "mmHg";
+        break;
+    case 5:
+        convertedPres = CVRT::kPa_to_psi(currentPres);
+        sCurrentPres = CVRT::double_to_string(convertedPres, 2) + "psi";
+        break;
+    default:
+        break;
+    }
+    return sCurrentPres;
 }

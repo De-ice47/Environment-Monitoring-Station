@@ -19,8 +19,6 @@ void ConstructTree(){
     Pressure = NGUI::UINode("Pressure");
     Humidity = NGUI::UINode("Humidity");
     AQI = NGUI::UINode("AQI");
-    
-    Settings = NGUI::UINode("Settings");
 
     // Linking
     NGUI::RootNode.AddChild(&DEBUG);
@@ -30,11 +28,4 @@ void ConstructTree(){
     DEBUG.AddChild(&Pressure);
     DEBUG.AddChild(&Humidity);
     DEBUG.AddChild(&AQI);
-
-    Temperature.AddChild(&Settings);
-    Pressure.AddChild(&Settings);
-    Humidity.AddChild(&Settings);
-    AQI.AddChild(&Settings);
-    AllData.AddChild(&Settings);
-    
 }
