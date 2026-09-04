@@ -8,7 +8,7 @@
 
 // Settings
 float updateInterval_sensor = 150;
-float updateInterval_display = 100;
+float updateInterval_display = 150;
 // Timers
 float timerDisplay = 0;
 float timerSensor = 0;
